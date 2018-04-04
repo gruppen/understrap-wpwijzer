@@ -58,16 +58,31 @@ add_filter( 'emoji_svg_url', '__return_false' );
 
 
 
+
+
 // disable XMLRPC
 add_filter('xmlrpc_enabled', '__return_false');
-
-
 remove_action ('wp_head', 'rsd_link');
-
 remove_action( 'wp_head', 'wlwmanifest_link');
 
+// deque wp-embed
+function my_deregister_scripts(){
+ wp_dequeue_script( 'wp-embed' );
+}
+add_action( 'wp_footer', 'my_deregister_scripts' );
 
 
 // remove RSS feed 
 remove_action( 'wp_head','feed_links', 2 );
 remove_action( 'wp_head','feed_links_extra', 3 );
+
+/**
+ * Move jQuery to the footer. 
+ */
+function wpse_173601_enqueue_scripts() {
+    wp_scripts()->add_data( 'jquery', 'group', 1 );
+    wp_scripts()->add_data( 'jquery-core', 'group', 1 );
+    wp_scripts()->add_data( 'popper-scripts', 'group', 1 );
+}
+add_action( 'wp_enqueue_scripts', 'wpse_173601_enqueue_scripts' );
+
